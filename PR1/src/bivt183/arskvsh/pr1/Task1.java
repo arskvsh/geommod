@@ -81,7 +81,6 @@ public class Task1 implements GLEventListener {
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         
         int ptsQ = 100;
-        int[][] pts = new int[ptsQ][ptsQ];
         
         for (int i = ptsQ; i < 10; i++) {
                 alpha = Math.random();
