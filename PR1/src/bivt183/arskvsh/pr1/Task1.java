@@ -27,7 +27,6 @@ public class Task1 implements GLEventListener {
         canvas.addGLEventListener(new Task1());
         frame.add(canvas);
         frame.setSize(500, 500);
-        final Animator animator = new Animator(canvas);
         frame.addWindowListener(new WindowAdapter() {
 
             @Override
@@ -38,7 +37,6 @@ public class Task1 implements GLEventListener {
                 new Thread(new Runnable() {
 
                     public void run() {
-                        animator.stop();
                         System.exit(0);
                     }
                 }).start();
@@ -47,13 +45,13 @@ public class Task1 implements GLEventListener {
         // Center frame
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        animator.start();
     }
+   
 
     public void init(GLAutoDrawable drawable) {
         // Use debug pipeline
         // drawable.setGL(new DebugGL(drawable.getGL()));
-
+        
         GL gl = drawable.getGL();
         System.err.println("INIT GL IS: " + gl.getClass().getName());
 
@@ -64,7 +62,7 @@ public class Task1 implements GLEventListener {
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         gl.glShadeModel(GL.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
     }
-
+    
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
         GL gl = drawable.getGL();
         GLU glu = new GLU();
@@ -73,28 +71,41 @@ public class Task1 implements GLEventListener {
 
     public void display(GLAutoDrawable drawable) {
         GL gl = drawable.getGL();
-
-        int n=128;
-        double thickness = 0.5, R, alpha, da, x, y;
-                
+               
         gl.glClearColor(0,0,0,0);
         gl.glClear(GL.GL_COLOR_BUFFER_BIT);
         
-        int ptsQ = 100;
+        double thickness = 0.5, R, alpha, da, x, y;
+        int n=36;
+        da = 2*Math.PI/n;
+        alpha = 0;
         
-        for (int i = ptsQ; i < 10; i++) {
-                alpha = Math.random();
+        gl.glColor3d(1, 0.31, 0);
+        gl.glBegin(GL.GL_QUAD_STRIP);
+             while(alpha<=Math.PI*2+da) {
+                R = 1;
+                x = R*Math.cos(alpha);
+                y = R*Math.sin(alpha);
+                gl.glVertex2d(x, y);
+                R = thickness;
+                x = R*Math.cos(alpha);
+                y = R*Math.sin(alpha);
+                gl.glVertex2d(x, y);
+                alpha += da;
+            }
+        gl.glEnd();
+        
+        gl.glColor3d(1, 1, 1);
+        gl.glPointSize(3);
+        
+        int ptsQ = 500;
+        gl.glBegin(GL.GL_POINTS);
+            for (int i = 0; i < ptsQ; i++) {
+                alpha += Math.random();
                 R = (1-thickness)+Math.random()*thickness;
                 x = R*Math.cos(alpha);
                 y = R*Math.sin(alpha);
-                pts[i] = [x,y];
-                alpha = alpha+da; 
-        }
-        da = 2*Math.PI/n;
-        gl.glPointSize(2);
-        gl.glBegin(GL.GL_POINTS);
-            for (int i = ptsQ; i < 10; i++) {
-                
+                gl.glVertex2d(x, y);
             }
         gl.glEnd();
 
